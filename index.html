@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>교대근무표</title>
+<style>
+:root {
+  --day: #3b82f6; --night: #8b5cf6; --mid: #6366f1;
+  --off: #10b981; --rest: #f59e0b;
+  --bg: #0f172a; --card: #1e293b; --text: #e2e8f0; --muted: #64748b;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100dvh; }
+.container { max-width:480px; margin:0 auto; padding:12px; }
+header { text-align:center; padding:16px 0 8px; }
+header h1 { font-size:1.3rem; font-weight:700; }
+.controls { display:flex; gap:8px; align-items:center; justify-content:center; margin:12px 0; }
+.controls button { background:var(--card); border:1px solid #334155; color:var(--text); border-radius:8px; padding:8px 14px; font-size:1rem; cursor:pointer; }
+.controls button:active { background:#334155; }
+.controls .month-label { font-size:1.1rem; font-weight:600; min-width:140px; text-align:center; }
+.start-date { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:14px; font-size:0.85rem; }
+.start-date label { color:var(--muted); }
+.start-date input { background:var(--card); border:1px solid #334155; color:var(--text); border-radius:6px; padding:6px 10px; font-size:0.85rem; }
+.weekdays { display:grid; grid-template-columns:repeat(7,1fr); text-align:center; font-size:0.75rem; color:var(--muted); margin-bottom:4px; }
+.weekdays span:first-child { color:#f87171; }
+.weekdays span:last-child { color:#60a5fa; }
+.calendar { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cell { aspect-ratio:1; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:0.7rem; background:var(--card); position:relative; }
+.cell.empty { background:transparent; }
+.cell .date { font-size:0.65rem; color:var(--muted); margin-bottom:2px; }
+.cell .shift { font-weight:700; font-size:0.8rem; }
+.cell.sun .date { color:#f87171; }
+.cell.sat .date { color:#60a5fa; }
+.cell.today { outline:2px solid #facc15; outline-offset:-1px; }
+.cell[data-shift="주간"] .shift { color:var(--day); }
+.cell[data-shift="야간"] .shift { color:var(--night); }
+.cell[data-shift="심야"] .shift { color:var(--mid); }
+.cell[data-shift="비번"] .shift { color:var(--off); }
+.cell[data-shift="휴무"] .shift { color:var(--rest); }
+.legend { display:flex; justify-content:center; gap:12px; margin-top:14px; flex-wrap:wrap; font-size:0.75rem; }
+.legend span { display:flex; align-items:center; gap:4px; }
+.legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.stats { background:var(--card); border-radius:10px; padding:12px; margin-top:12px; display:grid; grid-template-columns:repeat(5,1fr); text-align:center; font-size:0.75rem; gap:4px; }
+.stats .val { font-size:1.1rem; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header><h1>🗓️ 교대근무표</h1></header>
+  <div class="start-date">
+    <label>근무 시작일</label>
+    <input type="date" id="startDate">
+  </div>
+  <div class="controls">
+    <button id="prev">◀</button>
+    <div class="month-label" id="monthLabel"></div>
+    <button id="next">▶</button>
+  </div>
+  <div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+  <div class="calendar" id="cal"></div>
+  <div class="legend">
+    <span><i class="dot" style="background:var(--day)"></i>주간</span>
+    <span><i class="dot" style="background:var(--night)"></i>야간</span>
+    <span><i class="dot" style="background:var(--mid)"></i>심야</span>
+    <span><i class="dot" style="background:var(--off)"></i>비번</span>
+    <span><i class="dot" style="background:var(--rest)"></i>휴무</span>
+  </div>
+  <div class="stats" id="stats"></div>
+</div>
+<script>
+const PATTERN = ['주간','야간','심야','비번','휴무','주간','야간','비번','비번','휴무'];
+let viewYear, viewMonth; // 0-indexed month
+const $cal = document.getElementById('cal');
+const $label = document.getElementById('monthLabel');
+const $start = document.getElementById('startDate');
+const $stats = document.getElementById('stats');
+
+function init() {
+  const saved = localStorage.getItem('shiftStart');
+  const today = new Date();
+  $start.value = saved || fmt(today);
+  viewYear = today.getFullYear();
+  viewMonth = today.getMonth();
+  render();
+}
+
+function fmt(d) { return d.toISOString().slice(0,10); }
+
+function getShift(dateStr) {
+  const start = new Date($start.value + 'T00:00:00');
+  const cur = new Date(dateStr + 'T00:00:00');
+  const diff = Math.round((cur - start) / 86400000);
+  if (diff < 0) return PATTERN[((diff % 10) + 10) % 10];
+  return PATTERN[diff % 10];
+}
+
+function render() {
+  const first = new Date(viewYear, viewMonth, 1);
+  const last = new Date(viewYear, viewMonth + 1, 0);
+  const startDay = first.getDay();
+  const days = last.getDate();
+  const todayStr = fmt(new Date());
+
+  $label.textContent = `${viewYear}년 ${viewMonth + 1}월`;
+
+  let html = '';
+  for (let i = 0; i < startDay; i++) html += '<div class="cell empty"></div>';
+
+  const counts = {};
+  for (let d = 1; d <= days; d++) {
+    const date = new Date(viewYear, viewMonth, d);
+    const ds = fmt(date);
+    const dow = date.getDay();
+    const shift = getShift(ds);
+    counts[shift] = (counts[shift] || 0) + 1;
+    const cls = ['cell'];
+    if (dow === 0) cls.push('sun');
+    if (dow === 6) cls.push('sat');
+    if (ds === todayStr) cls.push('today');
+    html += `<div class="${cls.join(' ')}" data-shift="${shift}"><span class="date">${d}</span><span class="shift">${shift}</span></div>`;
+  }
+  $cal.innerHTML = html;
+
+  const order = ['주간','야간','심야','비번','휴무'];
+  const colors = {'주간':'var(--day)','야간':'var(--night)','심야':'var(--mid)','비번':'var(--off)','휴무':'var(--rest)'};
+  $stats.innerHTML = order.map(s => `<div><div class="val" style="color:${colors[s]}">${counts[s]||0}</div>${s}</div>`).join('');
+}
+
+$start.addEventListener('change', () => { localStorage.setItem('shiftStart', $start.value); render(); });
+document.getElementById('prev').addEventListener('click', () => { viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; } render(); });
+document.getElementById('next').addEventListener('click', () => { viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; } render(); });
+
+// swipe
+let tx = 0;
+$cal.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
+$cal.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if (Math.abs(dx) > 50) { dx > 0 ? document.getElementById('prev').click() : document.getElementById('next').click(); }
+}, {passive:true});
+
+init();
+</script>
+</body>
+</html>
