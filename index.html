@@ -297,11 +297,18 @@ body.light .glass {
   letter-spacing:0.12em;
 }
 .cell.holiday {
-  background:rgba(251,113,133,0.2);
-  border-color:rgba(251,113,133,0.35);
+  background: radial-gradient(circle at top, rgba(251,113,133,0.35), rgba(240,81,35,0.18) 65%);
+  border-color:rgba(251,113,133,0.6);
+  box-shadow: 0 0 16px rgba(251,113,133,0.45);
+  position:relative;
+  overflow:hidden;
 }
 @media (max-width:520px) {
-  .cell.holiday {background:rgba(251,113,133,0.25);}
+  .cell.holiday {
+    background: radial-gradient(circle at top, rgba(251,113,133,0.45), rgba(240,81,35,0.25) 60%);
+    border-color:rgba(251,113,133,0.7);
+    box-shadow: 0 0 12px rgba(251,113,133,0.5);
+  }
 }
 .cell:active { transform:scale(0.93); }
 .cell.empty { background:transparent; pointer-events:none; }
