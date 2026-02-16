@@ -97,6 +97,11 @@ body {
 }
 .icon-btn:active { transform: scale(0.93); }
 
+.theme-btn.active {
+  border-color: var(--day);
+  box-shadow: 0 0 0 2px rgba(14,165,233,0.35);
+}
+
 /* Today banner */
 .today-banner {
   padding: 26px 20px;
@@ -371,7 +376,8 @@ body.week-mode .weekdays span { color: #0b0d1a; }
   <div class="header">
     <h1>🗓️ 교대근무표</h1>
     <div class="header-btns">
-      <button class="icon-btn" id="themeBtn" title="테마 전환">🌙</button>
+      <button class="icon-btn theme-btn" id="dayThemeBtn" title="낮 모드">☀️</button>
+      <button class="icon-btn theme-btn" id="nightThemeBtn" title="밤 모드">🌙</button>
       <button class="icon-btn" id="exportBtn" title="내보내기">📤</button>
     </div>
   </div>
@@ -393,12 +399,6 @@ body.week-mode .weekdays span { color: #0b0d1a; }
       <button class="nav-btn" id="next">▶</button>
     </div>
     <button class="today-btn" id="todayNavBtn">오늘</button>
-  </div>
-
-  <!-- View toggle -->
-  <div class="view-toggle">
-    <button id="monthViewBtn" class="active">월간</button>
-    <button id="weekViewBtn">주간</button>
   </div>
 
   <!-- Calendar -->
@@ -455,7 +455,7 @@ const HOLIDAYS = {
   '2026-12-25':'크리스마스'
 };
 
-let viewYear, viewMonth, viewMode = 'month', viewWeekStart = null;
+let viewYear, viewMonth;
 let slideDir = '';
 
 const $ = id => document.getElementById(id);
@@ -472,7 +472,7 @@ function todayStr() { return fmt(today()); }
 
 const DEVICE_SIGNATURE = `${navigator.userAgent}|${navigator.language}|${navigator.platform}`;
 const STORAGE_KEY = 'shiftCalDevice:' + (window.btoa ? window.btoa(DEVICE_SIGNATURE).replace(/=+$/,'') : encodeURIComponent(DEVICE_SIGNATURE));
-const createDefaultDeviceData = () => ({ startDate: fmt(today()), notes: {}, theme: 'dark', viewMode: 'month' });
+const createDefaultDeviceData = () => ({ startDate: fmt(today()), notes: {}, theme: 'dark' });
 function loadDeviceData() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) return createDefaultDeviceData();
@@ -580,39 +580,6 @@ function renderMonth() {
   renderStats(counts, days);
 }
 
-function renderWeek() {
-  if (!viewWeekStart) {
-    const t = today(); const dow = t.getDay();
-    viewWeekStart = new Date(t); viewWeekStart.setDate(t.getDate() - dow);
-  }
-  const ws = viewWeekStart;
-  const ts = todayStr();
-  const notes = getNotes();
-
-  const endOfWeek = new Date(ws); endOfWeek.setDate(ws.getDate()+6);
-  $label.textContent = `${ws.getMonth()+1}/${ws.getDate()} - ${endOfWeek.getMonth()+1}/${endOfWeek.getDate()}`;
-
-  let html = '';
-  const counts = {};
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(ws); d.setDate(ws.getDate()+i);
-    const ds = fmt(d); const dow = d.getDay();
-    const shift = getShift(ds);
-    counts[shift] = (counts[shift]||0) + 1;
-    const cls = ['cell'];
-    if (dow === 0) cls.push('sun');
-    if (dow === 6) cls.push('sat');
-    if (ds === ts) cls.push('today');
-    if (HOLIDAYS[ds]) cls.push('holiday');
-    if (notes[ds]) cls.push('has-note');
-    html += `<div class="${cls.join(' ')}" data-shift="${shift}" data-date="${ds}" onclick="openDetail('${ds}')">
-      <span class="date">${d.getDate()}</span><span class="shift">${shift}</span></div>`;
-  }
-  $cal.innerHTML = html;
-  if (slideDir) { $cal.classList.add('slide-'+slideDir); setTimeout(()=>$cal.classList.remove('slide-'+slideDir),300); slideDir=''; }
-  renderStats(counts, 7);
-}
-
 function renderStats(counts, total) {
   const order = ['주간','야간','심야','비번','휴무'];
   const workDays = (counts['주간']||0)+(counts['야간']||0)+(counts['심야']||0);
@@ -651,7 +618,7 @@ function renderUpcoming() {
 
 function render() {
   renderBanner();
-  if (viewMode === 'month') renderMonth(); else renderWeek();
+  renderMonth();
   renderUpcoming();
 }
 
@@ -700,46 +667,26 @@ function showToast(msg) {
 }
 
 // Theme
-function setTheme(light) {
+function setThemeMode(mode) {
+  const light = mode === 'light';
   document.body.classList.toggle('light', light);
-  $('themeBtn').textContent = light ? '☀️' : '🌙';
   document.querySelector('meta[name="theme-color"]').content = light ? '#f1f5f9' : '#0f172a';
   persistDeviceData({ theme: light ? 'light' : 'dark' });
+  $('dayThemeBtn').classList.toggle('active', light);
+  $('nightThemeBtn').classList.toggle('active', !light);
 }
-$('themeBtn').addEventListener('click', () => setTheme(!document.body.classList.contains('light')));
-
-function updateViewToggle() {
-  const isWeek = viewMode === 'week';
-  $('weekViewBtn').classList.toggle('active', isWeek);
-  $('monthViewBtn').classList.toggle('active', !isWeek);
-  document.body.classList.toggle('week-mode', isWeek);
-}
-
-// View toggle
-$('monthViewBtn').addEventListener('click', () => {
-  viewMode = 'month';
-  persistDeviceData({ viewMode: 'month' });
-  updateViewToggle();
-  render();
-});
-$('weekViewBtn').addEventListener('click', () => {
-  viewMode = 'week'; viewWeekStart = null;
-  persistDeviceData({ viewMode: 'week' });
-  updateViewToggle();
-  render();
-});
+$('dayThemeBtn').addEventListener('click', () => setThemeMode('light'));
+$('nightThemeBtn').addEventListener('click', () => setThemeMode('dark'));
 
 // Navigation
 function navPrev() {
   slideDir = 'right';
-  if (viewMode === 'month') { viewMonth--; if (viewMonth<0){viewMonth=11;viewYear--;} }
-  else { viewWeekStart.setDate(viewWeekStart.getDate()-7); }
+  viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
   render();
 }
 function navNext() {
   slideDir = 'left';
-  if (viewMode === 'month') { viewMonth++; if (viewMonth>11){viewMonth=0;viewYear++;} }
-  else { viewWeekStart.setDate(viewWeekStart.getDate()+7); }
+  viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
   render();
 }
 $('prev').addEventListener('click', navPrev);
@@ -747,7 +694,7 @@ $('next').addEventListener('click', navNext);
 $('todayNavBtn').addEventListener('click', () => {
   const t = today();
   viewYear = t.getFullYear(); viewMonth = t.getMonth();
-  viewWeekStart = null; render();
+  render();
 });
 $start.addEventListener('change', () => { persistDeviceData({ startDate: $start.value }); render(); });
 
@@ -794,9 +741,7 @@ function init() {
   const t = today();
   $start.value = deviceData.startDate || fmt(t);
   viewYear = t.getFullYear(); viewMonth = t.getMonth();
-  viewMode = deviceData.viewMode === 'week' ? 'week' : 'month';
-  updateViewToggle();
-  setTheme(deviceData.theme === 'light');
+  setThemeMode(deviceData.theme === 'light' ? 'light' : 'dark');
   render();
 }
 
