@@ -405,12 +405,14 @@ body.week-mode .weekdays span { color: #0b0d1a; }
 }
 
 @media (max-width:520px) {
-  .cal-wrapper { min-height:min(55vh,360px); padding-top:12px; overflow-y:auto; }
-  .calendar { gap:4px; padding:2px; grid-auto-rows:minmax(90px,1fr); }
-  .cell { min-height:120px; padding:12px 6px; }
-  .cell .date { font-size:1.4rem; }
-  .cell .shift { font-size:1.35rem; }
-  .weekdays { font-size:0.85rem; letter-spacing:0.15em; }
+  .container { padding: 10px 6px 80px; }
+  .cal-wrapper { min-height:min(50vh,320px); padding-top:8px; border-radius:18px; overflow-y:auto; }
+  .calendar { gap:3px; padding:1px; grid-auto-rows:minmax(80px,1fr); }
+  .cell { min-height:100px; padding:8px 5px; }
+  .cell .date { font-size:1.3rem; }
+  .cell .shift { font-size:1.25rem; }
+  .weekdays { font-size:0.8rem; letter-spacing:0.12em; }
+  body { background: #01030a; }
 }
 
 /* Page load animation */
