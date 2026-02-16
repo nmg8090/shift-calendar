@@ -284,6 +284,18 @@ body.light .glass {
   position:relative; cursor:pointer; transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
+.cell-note {
+  font-size:0.68rem;
+  color:var(--text2);
+  margin-top:4px;
+  text-align:center;
+  max-width:100%;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  font-family: var(--body-font);
+  letter-spacing:0.12em;
+}
 .cell.holiday {
   background:rgba(251,113,133,0.2);
   border-color:rgba(251,113,133,0.35);
@@ -533,6 +545,10 @@ function formatDisplayDate(date) {
   return `${date.getMonth()+1}/${date.getDate()} (${DAYS_KR[date.getDay()]})`;
 }
 
+function sanitizeHTML(str) {
+  return str ? str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+}
+
 function renderShiftCards() {
   const todayDate = today();
   const tomorrowDate = new Date(todayDate);
@@ -576,6 +592,7 @@ function renderMonth() {
     const date = new Date(viewYear, viewMonth, d);
     const dow = date.getDay();
     const shift = getShift(ds);
+    const note = notes[ds] ? sanitizeHTML(notes[ds]) : '';
     const cls = ['cell'];
     if (dow === 0) cls.push('sun');
     if (dow === 6) cls.push('sat');
@@ -583,7 +600,7 @@ function renderMonth() {
     if (HOLIDAYS[ds]) cls.push('holiday');
     if (notes[ds]) cls.push('has-note');
     html += `<div class="${cls.join(' ')}" data-shift="${shift}" data-date="${ds}" onclick="openDetail('${ds}')">
-      <span class="date">${d}</span><span class="shift">${shift}</span></div>`;
+      <span class="date">${d}</span><span class="shift">${shift}</span>${note ? `<div class="cell-note">${note}</div>` : ''}</div>`;
   }
   $cal.innerHTML = html;
   if (slideDir) { $cal.classList.add('slide-'+slideDir); setTimeout(()=>$cal.classList.remove('slide-'+slideDir),300); slideDir=''; }
