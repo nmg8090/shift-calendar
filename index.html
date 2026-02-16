@@ -16,6 +16,11 @@
   --text: #e2e8f0; --text2: #cbd5e1; --muted: #64748b;
   --radius: 16px; --radius-sm: 10px;
   --shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --cell-height: 150px;
+  --cal-border: 1px solid rgba(255,255,255,0.16);
+  --cal-inner-padding: 6px;
+  --container-max: 100%;
+  --cell-gap: 4px;
 }
 .light {
   --bg: #f1f5f9; --bg2: #e2e8f0; --card: rgba(255,255,255,0.6); --card-solid: #fff;
@@ -26,11 +31,14 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg); color: var(--text);
+  font-size: 1.1rem;
+  background: linear-gradient(180deg, #050816, #0f172a 55%, #0a0e1d);
+  color: var(--text);
   min-height: 100dvh; transition: background 0.4s, color 0.4s;
   overflow-x: hidden;
+  padding: 0 6px;
 }
-.container { max-width: 520px; margin: 0 auto; padding: 16px 14px 80px; }
+.container { width: min(100%, 100%); margin: 0 auto; padding: 16px 8px 80px; }
 
 /* Glass card mixin */
 .glass {
@@ -53,7 +61,10 @@ body {
 
 /* Today banner */
 .today-banner {
-  padding: 20px; margin: 10px 0; text-align: center;
+  padding: 24px 18px;
+  margin: 12px 0;
+  border-radius: 20px;
+  text-align: center;
   animation: fadeSlideUp 0.6s ease;
 }
 .today-banner .today-label { font-size:0.8rem; color:var(--muted); margin-bottom:6px; letter-spacing:1px; text-transform:uppercase; }
@@ -80,14 +91,14 @@ body {
 .start-row input:focus { border-color: var(--day); }
 
 /* Controls */
-.controls { display:flex; gap:8px; align-items:center; justify-content:center; margin:10px 0; }
+.controls { display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center; margin:10px 0; width:100%; }
 .nav-btn {
   background:var(--glass); border:1px solid var(--glass-border); color:var(--text);
   border-radius:12px; padding:10px 18px; font-size:1rem; cursor:pointer;
   transition: all 0.2s; font-weight:500;
 }
 .nav-btn:active { transform:scale(0.95); background:var(--glass-border); }
-.month-label { font-size:1.2rem; font-weight:700; min-width:150px; text-align:center; }
+.month-label { font-size:1.4rem; font-weight:700; flex:1; min-width:0; text-align:center; }
 .today-btn {
   position:absolute; right:0; background:var(--day); color:#fff; border:none;
   border-radius:8px; padding:6px 12px; font-size:0.75rem; cursor:pointer; font-weight:600;
@@ -109,16 +120,20 @@ body {
 /* Weekdays */
 .weekdays {
   display:grid; grid-template-columns:repeat(7,1fr); text-align:center;
-  font-size:0.75rem; color:var(--muted); padding:8px 0 4px; font-weight:600;
+  font-size:1rem; letter-spacing:0.7px; color:var(--muted); padding:12px 0 8px; font-weight:700;
 }
 .weekdays span:first-child { color:#f87171; }
 .weekdays span:last-child { color:#60a5fa; }
 
 /* Calendar grid */
-.cal-wrapper { position:relative; overflow:hidden; min-height:280px; }
+.cal-wrapper { position:relative; overflow:hidden; min-height:360px; padding-top:12px; border-radius:24px; border: 1px solid rgba(255,255,255,0.08); background: rgba(15,23,42,0.8); box-shadow: 0 12px 40px rgba(0,0,0,0.35); }
 .calendar {
-  display:grid; grid-template-columns:repeat(7,1fr); gap:4px;
-  transition: opacity 0.15s; padding:2px;
+  display:grid; grid-template-columns:repeat(7,1fr); gap:var(--cell-gap);
+  grid-auto-rows: minmax(120px, 1fr);
+  transition: opacity 0.15s; padding:var(--cal-inner-padding); width:100%;
+  border-radius:20px;
+  border: var(--cal-border);
+  background: rgba(7,11,21,0.55);
 }
 .calendar.slide-left { animation: slideLeft 0.3s ease; }
 .calendar.slide-right { animation: slideRight 0.3s ease; }
@@ -142,15 +157,18 @@ body {
 
 .cell {
   aspect-ratio:1; border-radius:var(--radius-sm);
+  min-height:var(--cell-height);
+  padding:14px 8px;
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  font-size:0.7rem; background:var(--glass); border:1px solid transparent;
+  gap:6px;
+  background:var(--glass); border:1px solid rgba(255,255,255,0.15);
   position:relative; cursor:pointer; transition: all 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 .cell:active { transform:scale(0.93); }
 .cell.empty { background:transparent; pointer-events:none; }
-.cell .date { font-size:0.7rem; color:var(--muted); margin-bottom:1px; font-weight:500; }
-.cell .shift { font-weight:700; font-size:0.75rem; }
+.cell .date { font-size:1.6rem; color:var(--muted); margin-bottom:4px; font-weight:700; line-height:1.25; }
+.cell .shift { font-weight:700; font-size:1.5rem; }
 .cell.sun .date { color:#f87171; }
 .cell.sat .date { color:#60a5fa; }
 .cell.holiday .date { color:#fb7185 !important; }
@@ -247,12 +265,31 @@ body {
 .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
 
 /* Responsive desktop */
+@media (max-width:640px) {
+  .container { max-width: 100%; padding: 14px 8px 72px; }
+  .header { gap: 10px; }
+  .header h1 { font-size: 1.6rem; }
+  .today-banner { margin: 10px 0; }
+  .controls { gap: 6px; }
+  .view-toggle { width: 100%; justify-content: center; }
+  .weekdays { padding: 8px 0 6px; }
+}
+
 @media (min-width:600px) {
   .container { padding:24px; }
-  .cell { font-size:0.8rem; border-radius:12px; }
-  .cell .shift { font-size:0.85rem; }
-  .cell .date { font-size:0.75rem; }
+  .cell { min-height:130px; padding:14px 8px; border-radius:14px; }
+  .cell .shift { font-size:1.2rem; }
+  .cell .date { font-size:1.3rem; }
   .today-banner .today-shift { font-size:3rem; }
+}
+
+@media (max-width:520px) {
+  .cal-wrapper { min-height:460px; padding-top:16px; }
+  .calendar { gap:6px; padding:4px; }
+  .cell { min-height:150px; padding:14px 8px; }
+  .cell .date { font-size:1.7rem; }
+  .cell .shift { font-size:1.6rem; }
+  .weekdays { font-size:0.9rem; }
 }
 
 /* Page load animation */
@@ -356,6 +393,7 @@ const $ = id => document.getElementById(id);
 const $cal = $('cal'), $label = $('monthLabel'), $start = $('startDate');
 const $stats = $('stats'), $upcoming = $('upcoming'), $banner = $('todayBanner');
 const $modal = $('modal'), $overlay = $('modalOverlay'), $toast = $('toast');
+const $calWrapper = $cal.parentElement;
 
 function fmt(d) { return d.toISOString().slice(0,10); }
 function pad(n) { return n < 10 ? '0'+n : ''+n; }
@@ -611,12 +649,26 @@ $('todayNavBtn').addEventListener('click', () => {
 $start.addEventListener('change', () => { localStorage.setItem('shiftStart', $start.value); render(); });
 
 // Swipe
-let tx = 0;
-$cal.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, {passive:true});
-$cal.addEventListener('touchend', e => {
-  const dx = e.changedTouches[0].clientX - tx;
-  if (Math.abs(dx) > 50) { dx > 0 ? navPrev() : navNext(); }
-}, {passive:true});
+const getSwipeThreshold = () => Math.max(60, window.innerWidth * 0.12);
+let touchStartX = 0;
+let touchActive = false;
+const startSwipe = e => {
+  if (!e.touches || e.touches.length !== 1) return;
+  touchActive = true;
+  touchStartX = e.touches[0].clientX;
+};
+const endSwipe = e => {
+  if (!touchActive) return;
+  touchActive = false;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > getSwipeThreshold()) {
+    dx > 0 ? navPrev() : navNext();
+  }
+};
+const cancelSwipe = () => { touchActive = false; };
+$calWrapper.addEventListener('touchstart', startSwipe, {passive:true});
+$calWrapper.addEventListener('touchend', endSwipe, {passive:true});
+$calWrapper.addEventListener('touchcancel', cancelSwipe, {passive:true});
 
 // Export
 $('exportBtn').addEventListener('click', async () => {
