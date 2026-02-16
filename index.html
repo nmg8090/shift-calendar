@@ -303,6 +303,8 @@ body {
     <h1>🗓️ 교대근무표</h1>
     <div class="header-btns">
       <button class="icon-btn" id="themeBtn" title="테마 전환">🌙</button>
+      <button class="icon-btn" id="backupBtn" title="설정 백업">💾</button>
+      <button class="icon-btn" id="importBtn" title="설정 불러오기">📂</button>
       <button class="icon-btn" id="exportBtn" title="내보내기">📤</button>
     </div>
   </div>
@@ -362,6 +364,7 @@ body {
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
+<input type="file" id="importFile" accept="application/json" hidden>
 
 <script>
 const PATTERN = ['주간','야간','심야','비번','휴무','주간','야간','비번','비번','휴무'];
@@ -394,12 +397,42 @@ const $cal = $('cal'), $label = $('monthLabel'), $start = $('startDate');
 const $stats = $('stats'), $upcoming = $('upcoming'), $banner = $('todayBanner');
 const $modal = $('modal'), $overlay = $('modalOverlay'), $toast = $('toast');
 const $calWrapper = $cal.parentElement;
+const $backupBtn = $('backupBtn');
+const $importBtn = $('importBtn');
+const importFile = $('importFile');
 
 function fmt(d) { return d.toISOString().slice(0,10); }
 function pad(n) { return n < 10 ? '0'+n : ''+n; }
 function fmtLocal(y,m,d) { return y+'-'+pad(m+1)+'-'+pad(d); }
 function today() { const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
 function todayStr() { return fmt(today()); }
+
+const DEVICE_SIGNATURE = `${navigator.userAgent}|${navigator.language}|${navigator.platform}`;
+const STORAGE_KEY = 'shiftCalDevice:' + (window.btoa ? window.btoa(DEVICE_SIGNATURE).replace(/=+$/,'') : encodeURIComponent(DEVICE_SIGNATURE));
+const createDefaultDeviceData = () => ({ startDate: fmt(today()), notes: {}, theme: 'dark', viewMode: 'month' });
+function loadDeviceData() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return createDefaultDeviceData();
+  try {
+    const parsed = JSON.parse(raw);
+    return { ...createDefaultDeviceData(), ...parsed, notes: parsed.notes || {} };
+  } catch (err) {
+    return createDefaultDeviceData();
+  }
+}
+function persistDeviceData(partial) {
+  deviceData = { ...deviceData, ...partial };
+  if (!deviceData.notes) deviceData.notes = {};
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(deviceData));
+}
+function getDeviceNotes() {
+  return deviceData.notes || {};
+}
+function saveDeviceNotes(notes) {
+  persistDeviceData({ notes });
+}
+
+let deviceData = loadDeviceData();
 
 function getShift(dateStr) {
   const start = new Date($start.value+'T00:00:00');
@@ -415,8 +448,8 @@ function getCycleDay(dateStr) {
   return (((diff % 10) + 10) % 10) + 1;
 }
 
-function getNotes() { try { return JSON.parse(localStorage.getItem('shiftNotes')||'{}'); } catch { return {}; } }
-function saveNotes(n) { localStorage.setItem('shiftNotes', JSON.stringify(n)); }
+function getNotes() { return getDeviceNotes(); }
+function saveNotes(n) { saveDeviceNotes(n); }
 
 function nextRestDays() {
   const t = today();
@@ -608,21 +641,68 @@ function setTheme(light) {
   document.body.classList.toggle('light', light);
   $('themeBtn').textContent = light ? '☀️' : '🌙';
   document.querySelector('meta[name="theme-color"]').content = light ? '#f1f5f9' : '#0f172a';
-  localStorage.setItem('shiftTheme', light ? 'light' : 'dark');
+  persistDeviceData({ theme: light ? 'light' : 'dark' });
 }
 $('themeBtn').addEventListener('click', () => setTheme(!document.body.classList.contains('light')));
+
+function downloadDeviceSettings() {
+  const payload = { ...deviceData };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  anchor.href = url;
+  anchor.download = `shift-calendar-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  showToast('설정이 다운로드되었습니다 💾');
+}
+
+function handleImportedFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      deviceData = { ...createDefaultDeviceData(), ...parsed, notes: parsed.notes || {} };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(deviceData));
+      $start.value = deviceData.startDate || fmt(today());
+      viewMode = deviceData.viewMode === 'week' ? 'week' : 'month';
+      updateViewToggle();
+      setTheme(deviceData.theme === 'light');
+      render();
+      showToast('설정을 불러왔습니다 📂');
+    } catch (err) {
+      showToast('불러오기 실패 ☹️');
+    }
+  };
+  reader.readAsText(file);
+}
+
+$backupBtn.addEventListener('click', downloadDeviceSettings);
+$importBtn.addEventListener('click', () => importFile.click());
+importFile.addEventListener('change', e => {
+  handleImportedFile(e.target.files && e.target.files[0]);
+  e.target.value = '';
+});
+
+function updateViewToggle() {
+  const isWeek = viewMode === 'week';
+  $('weekViewBtn').classList.toggle('active', isWeek);
+  $('monthViewBtn').classList.toggle('active', !isWeek);
+}
 
 // View toggle
 $('monthViewBtn').addEventListener('click', () => {
   viewMode = 'month';
-  $('monthViewBtn').classList.add('active');
-  $('weekViewBtn').classList.remove('active');
+  persistDeviceData({ viewMode: 'month' });
+  updateViewToggle();
   render();
 });
 $('weekViewBtn').addEventListener('click', () => {
   viewMode = 'week'; viewWeekStart = null;
-  $('weekViewBtn').classList.add('active');
-  $('monthViewBtn').classList.remove('active');
+  persistDeviceData({ viewMode: 'week' });
+  updateViewToggle();
   render();
 });
 
@@ -646,7 +726,7 @@ $('todayNavBtn').addEventListener('click', () => {
   viewYear = t.getFullYear(); viewMonth = t.getMonth();
   viewWeekStart = null; render();
 });
-$start.addEventListener('change', () => { localStorage.setItem('shiftStart', $start.value); render(); });
+$start.addEventListener('change', () => { persistDeviceData({ startDate: $start.value }); render(); });
 
 // Swipe
 const getSwipeThreshold = () => Math.max(60, window.innerWidth * 0.12);
@@ -688,11 +768,12 @@ $('exportBtn').addEventListener('click', async () => {
 
 // Init
 function init() {
-  const saved = localStorage.getItem('shiftStart');
   const t = today();
-  $start.value = saved || fmt(t);
+  $start.value = deviceData.startDate || fmt(t);
   viewYear = t.getFullYear(); viewMonth = t.getMonth();
-  if (localStorage.getItem('shiftTheme') === 'light') setTheme(true);
+  viewMode = deviceData.viewMode === 'week' ? 'week' : 'month';
+  updateViewToggle();
+  setTheme(deviceData.theme === 'light');
   render();
 }
 
