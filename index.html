@@ -209,6 +209,212 @@ body.light .glass {
 }
 .controls-wrap { position:relative; display:flex; align-items:center; justify-content:center; width:100%; }
 
+/* Insights & cycle progress */
+.insights {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+  margin:10px 0;
+  padding:14px;
+}
+.insight-card {
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.05);
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-height:88px;
+  transition:transform 0.2s, border-color 0.2s;
+}
+.insight-card:hover {
+  border-color:var(--day);
+  transform:translateY(-2px);
+}
+.insight-card.focus {
+  background:linear-gradient(135deg, rgba(14,165,233,0.18), rgba(79,70,229,0.15));
+  border-color:rgba(14,165,233,0.4);
+  box-shadow:0 12px 30px rgba(14,165,233,0.25);
+}
+.insight-label {
+  font-size:0.7rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:600;
+}
+.insight-value {
+  font-size:1.4rem;
+  font-weight:700;
+  font-family:var(--heading-font);
+  letter-spacing:0.08em;
+}
+.insight-sub {
+  font-size:0.75rem;
+  color:var(--text2);
+  letter-spacing:0.08em;
+  line-height:1.3;
+}
+body.light .insight-card {
+  background:rgba(255,255,255,0.9);
+  border-color:rgba(148,163,184,0.4);
+}
+body.light .insight-card.focus {
+  box-shadow:0 12px 30px rgba(59,130,246,0.18);
+}
+.cycle-progress {
+  margin-top:12px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.cycle-progress-header {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.cycle-progress-title {
+  font-size:1rem;
+  font-weight:600;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  font-family:var(--heading-font);
+}
+.cycle-progress-sub {
+  font-size:0.75rem;
+  color:var(--muted);
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+}
+.cycle-progress-pill {
+  font-size:0.7rem;
+  font-weight:600;
+  padding:6px 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  border:1px solid rgba(255,255,255,0.3);
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+}
+.cycle-progress-bar {
+  width:100%;
+  height:8px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  overflow:hidden;
+}
+.cycle-progress-bar span {
+  display:block;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg, var(--day), var(--mid));
+  transition:width 0.4s ease;
+}
+.cycle-track {
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:4px;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;
+  scrollbar-width:none;
+}
+.cycle-track::-webkit-scrollbar { display:none; }
+.cycle-chip {
+  flex:0 0 auto;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,0.2);
+  font-size:0.72rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--text2);
+  background:rgba(255,255,255,0.04);
+  scroll-snap-align:center;
+  transition:all 0.3s ease;
+}
+.cycle-chip.active {
+  color:#fff;
+  border-color:var(--day);
+  background:rgba(14,165,233,0.35);
+}
+.cycle-chip.past {
+  opacity:0.5;
+}
+body.light .cycle-chip {
+  background:rgba(15,23,42,0.06);
+  border-color:rgba(148,163,184,0.35);
+  color:#0f172a;
+}
+body.light .cycle-chip.active {
+  background:rgba(14,165,233,0.25);
+  color:#fff;
+}
+
+/* Fatigue meter */
+.fatigue-meter {
+  margin-top:8px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.fatigue-bar-wrap {
+  flex:1;
+  height:6px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.1);
+  overflow:hidden;
+}
+body.light .fatigue-bar-wrap {
+  background:rgba(15,23,42,0.08);
+}
+.fatigue-bar-fill {
+  height:100%;
+  border-radius:999px;
+  transition:width 0.6s ease;
+}
+.fatigue-label {
+  font-size:0.7rem;
+  font-weight:600;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  min-width:48px;
+  text-align:right;
+}
+
+/* Weekly mini calendar in insights */
+.week-mini {
+  display:flex;
+  gap:4px;
+  margin-top:6px;
+}
+.week-mini-dot {
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  opacity:0.7;
+}
+.week-mini-dot.current {
+  opacity:1;
+  box-shadow:0 0 6px currentColor;
+  transform:scale(1.3);
+}
+
+/* Motivational message */
+.motivation-msg {
+  text-align:center;
+  padding:10px 16px;
+  font-size:0.8rem;
+  color:var(--text2);
+  letter-spacing:0.06em;
+  font-style:italic;
+  animation:fadeIn 0.8s ease;
+}
+
+
 /* View toggle */
 .view-toggle {
   display:flex; justify-content:center; gap:4px; margin:8px 0;
@@ -450,6 +656,10 @@ body.week-mode .weekdays span { color: #0b0d1a; }
     <input type="date" id="startDate">
   </div>
 
+  <!-- Insights -->
+  <div class="insights glass" id="insights"></div>
+  <div class="cycle-progress glass" id="cycleProgress"></div>
+
   <!-- Month controls -->
   <div class="controls-wrap">
     <div class="controls">
@@ -520,6 +730,7 @@ let slideDir = '';
 const $ = id => document.getElementById(id);
 const $cal = $('cal'), $label = $('monthLabel'), $start = $('startDate');
 const $stats = $('stats'), $upcoming = $('upcoming'), $banner = $('todayBanner');
+const $insights = $('insights'), $cycleProgress = $('cycleProgress');
 const $modal = $('modal'), $overlay = $('modalOverlay'), $toast = $('toast');
 const $calWrapper = $cal.parentElement;
 
@@ -581,6 +792,166 @@ function nextRestDays() {
     if (s === '휴무' || s === '비번') return i;
   }
   return null;
+}
+
+function daysUntil(dateStr) {
+  const target = new Date(dateStr+'T00:00:00');
+  const diff = Math.round((target - today()) / 86400000);
+  return Math.max(diff, 0);
+}
+
+function getNextHoliday(fromDate = today()) {
+  const current = fmt(fromDate);
+  const sorted = Object.keys(HOLIDAYS).sort();
+  for (const date of sorted) {
+    if (date >= current) return { date, label: HOLIDAYS[date] };
+  }
+  return null;
+}
+
+function getConsecutiveWorkDays(refDate = today()) {
+  let count = 0;
+  const cursor = new Date(refDate);
+  while (true) {
+    const ds = fmt(cursor);
+    const shift = getShift(ds);
+    if (shift === '휴무' || shift === '비번') break;
+    count++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return count;
+}
+
+function getFatigueLevel() {
+  // Fatigue based on consecutive work days and shift type
+  const consecutive = getConsecutiveWorkDays();
+  const ts = todayStr();
+  const shift = getShift(ts);
+  let base = consecutive * 15; // 15% per consecutive work day
+  if (shift === '야간') base += 15;
+  if (shift === '심야') base += 25;
+  if (shift === '비번' || shift === '휴무') base = Math.max(0, base - 30);
+  return Math.min(100, Math.max(0, base));
+}
+
+function getFatigueColor(level) {
+  if (level <= 30) return '#22c55e';
+  if (level <= 60) return '#eab308';
+  if (level <= 80) return '#f97316';
+  return '#ef4444';
+}
+
+function getFatigueEmoji(level) {
+  if (level <= 20) return '😊';
+  if (level <= 40) return '🙂';
+  if (level <= 60) return '😐';
+  if (level <= 80) return '😓';
+  return '😵';
+}
+
+function getMotivation() {
+  const ts = todayStr();
+  const shift = getShift(ts);
+  const rest = nextRestDays();
+  const d = new Date();
+  const hour = d.getHours();
+  const msgs = {
+    '주간': ['오늘도 화이팅! 해 떠 있을 때 힘내요 ☀️', '좋은 하루 되세요! 퇴근이 기다려요 💪', '주간 근무 파이팅! 점심 맛있게 드세요 🍚'],
+    '야간': ['밤새 고생 많아요! 건강 챙기세요 🌙', '야간 근무도 끝이 있어요. 힘내세요! ✨', '조용한 밤, 차 한잔 어때요? ☕'],
+    '심야': ['깊은 밤 수고하세요! 곧 끝나요 🌃', '심야 근무 끝나면 푹 쉬어요 💤', '새벽의 용사, 파이팅! 🦸'],
+    '비번': ['오늘은 쉬는 날! 맘껏 쉬세요 🏖️', '비번 만끽하세요! 충전의 시간 ⚡', '좋아하는 거 하면서 쉬어요 😎'],
+    '휴무': ['완전한 휴식의 날! 리프레시 타임 😴', '오늘은 나를 위한 날이에요 🎉', '푹 쉬고 에너지 충전하세요! 🔋']
+  };
+  const pool = msgs[shift] || msgs['주간'];
+  // Deterministic pick based on date
+  const dayNum = parseInt(ts.replace(/-/g, ''));
+  return pool[dayNum % pool.length];
+}
+
+function getWeekPreview() {
+  const t = today();
+  let dots = '';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(t); d.setDate(t.getDate() + i);
+    const s = getShift(fmt(d));
+    const isCurrent = i === 0;
+    dots += `<span class="week-mini-dot${isCurrent ? ' current' : ''}" style="background:${SHIFT_COLOR[s]};color:${SHIFT_COLOR[s]}"></span>`;
+  }
+  return dots;
+}
+
+function renderInsights() {
+  const restDays = nextRestDays();
+  const holidayInfo = getNextHoliday();
+  const consecutive = getConsecutiveWorkDays();
+  const fatigue = getFatigueLevel();
+  const fatigueColor = getFatigueColor(fatigue);
+  const fatigueEmoji = getFatigueEmoji(fatigue);
+  const restLabel = restDays ? `${restDays}일` : '오늘 쉬는 날';
+  const restSub = restDays ? `다음 비번/휴무까지 ${restDays}일 남음` : '충분히 쉬어요!';
+  const workLabel = consecutive ? `${consecutive}일 연속` : '오늘부터 시작';
+  const workSub = consecutive ? '잠깐 쉬며 집중 유지!' : '새 사이클을 응원해요!';
+  const holidayLabel = holidayInfo ? `${holidayInfo.date.slice(5).replace('-', '/')} - ${holidayInfo.label}` : '다음 공휴일 없음';
+  const holidaySub = holidayInfo ? `${daysUntil(holidayInfo.date)}일 남음` : '휴식 계획 잡아볼까요?';
+  const weekPreview = getWeekPreview();
+  $insights.innerHTML = `
+    <div class="insight-card focus">
+      <div class="insight-label">다음 휴무</div>
+      <div class="insight-value">${restLabel}</div>
+      <div class="insight-sub">${restSub}</div>
+      <div class="week-mini">${weekPreview}</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-label">컨디션 ${fatigueEmoji}</div>
+      <div class="insight-value">${fatigue <= 30 ? '좋음' : fatigue <= 60 ? '보통' : '피로'}</div>
+      <div class="fatigue-meter">
+        <div class="fatigue-bar-wrap"><div class="fatigue-bar-fill" style="width:${fatigue}%;background:${fatigueColor}"></div></div>
+        <span class="fatigue-label" style="color:${fatigueColor}">${fatigue}%</span>
+      </div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-label">현재 연속 근무</div>
+      <div class="insight-value">${workLabel}</div>
+      <div class="insight-sub">${workSub}</div>
+    </div>
+    <div class="insight-card">
+      <div class="insight-label">다가오는 공휴일</div>
+      <div class="insight-value">${holidayLabel}</div>
+      <div class="insight-sub">${holidaySub}</div>
+    </div>
+  `;
+}
+
+function scrollCycleToActive() {
+  const track = document.querySelector('.cycle-track');
+  const active = track && track.querySelector('.cycle-chip.active');
+  if (active && track) {
+    active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  }
+}
+
+function renderCycleProgress() {
+  const ts = todayStr();
+  const cycleDay = getCycleDay(ts);
+  const pct = Math.round((cycleDay / PATTERN.length) * 100);
+  const patternHtml = PATTERN.map((shift, index) => {
+    const active = index === cycleDay - 1;
+    const past = index < cycleDay - 1;
+    return `<span class="cycle-chip${active ? ' active' : ''}${past ? ' past' : ''}" title="${index+1}일 - ${shift}">${index+1}일 - ${SHIFT_EMOJI[shift]} ${shift}</span>`;
+  }).join('');
+  const currentShift = PATTERN[cycleDay - 1];
+  $cycleProgress.innerHTML = `
+    <div class="cycle-progress-header">
+      <div>
+        <div class="cycle-progress-title">10일 사이클</div>
+        <div class="cycle-progress-sub">현재 ${cycleDay}일차 / 10일</div>
+      </div>
+      <div class="cycle-progress-pill">${SHIFT_EMOJI[currentShift]} ${currentShift}</div>
+    </div>
+    <div class="cycle-progress-bar"><span style="width:${pct}%;"></span></div>
+    <div class="cycle-track">${patternHtml}</div>
+    <div class="motivation-msg">${getMotivation()}</div>
+  `;
 }
 
 function renderBanner() {
@@ -677,8 +1048,11 @@ function renderUpcoming() {
 
 function render() {
   renderBanner();
+  renderInsights();
   renderMonth();
+  renderCycleProgress();
   renderUpcoming();
+  requestAnimationFrame(scrollCycleToActive);
 }
 
 // Detail modal
