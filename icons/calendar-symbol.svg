@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Shift calendar icon">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1c1f48"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="26" fill="url(#bg)"/>
+  <rect x="12" y="20" width="96" height="82" rx="16" fill="#fff" opacity="0.08"/>
+  <rect x="12" y="26" width="96" height="20" rx="10" fill="url(#ring)" opacity="0.95"/>
+  <rect x="28" y="48" width="64" height="52" rx="10" fill="#fff"/>
+  <path d="M32 62h22" stroke="#0f172a" stroke-linecap="round" stroke-width="3"/>
+  <path d="M32 74h22" stroke="#0f172a" stroke-linecap="round" stroke-width="3"/>
+  <circle cx="80" cy="68" r="8" fill="#fb7185"/>
+  <circle cx="80" cy="86" r="8" fill="#22c55e"/>
+  <rect x="34" y="36" width="18" height="8" rx="4" fill="#0f172a" opacity="0.2"/>
+</svg>
