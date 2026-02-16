@@ -98,19 +98,11 @@ body.light .nav-btn {
   border-color: rgba(14,165,233,0.4);
 }
 body.light .header h1,
-body.light .month-label,
-body.light .today-banner .today-label,
-body.light .today-banner .today-shift,
-body.light .today-banner .today-sub,
-body.light .today-banner .rest-countdown {
+body.light .month-label {
   color: #0f172a;
 }
 body.light .weekdays span { color: #0f172a; }
-body.light .legend span { color: #1e293b; }
 body.light .today-btn { color:#0f172a; background:#fcd34d; }
-body.light .legend { background:transparent; }
-body.light .stats-card { background: transparent; }
-body.light .upcoming-item { background: rgba(255,255,255,0.85); border-color: rgba(148,163,184,0.4); }
 
 body {
   font-family: var(--body-font);
@@ -161,26 +153,47 @@ body.light .glass {
   box-shadow: 0 0 0 2px rgba(14,165,233,0.35);
 }
 
-/* Today banner */
-.today-banner {
-  padding: 26px 20px;
-  margin: 12px 0;
-  border-radius: 20px;
-  text-align: center;
-  animation: fadeSlideUp 0.6s ease;
+/* Shift summary */
+.shift-summary {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+  margin:14px 0;
 }
-.today-banner .today-label { font-size:0.75rem; color:var(--muted); margin-bottom:6px; letter-spacing:0.34em; text-transform:uppercase; font-family: var(--heading-font); }
-.today-banner .today-shift { font-size:2.6rem; font-weight:600; margin:4px 0; font-family: var(--heading-font); letter-spacing:0.08em; text-transform:uppercase; }
-.today-banner .today-emoji { font-size:2rem; }
-.today-banner .today-sub { font-size:0.85rem; color:var(--text2); margin-top:8px; line-height:1.4; letter-spacing:0.04em; }
-.today-banner .rest-countdown {
-  display:inline-block; margin-top:10px; padding:6px 16px;
-  background: rgba(251,191,36,0.15); border:1px solid rgba(251,191,36,0.2);
-  border-radius:20px; font-size:0.85rem; color:var(--rest); font-weight:600;
-  letter-spacing:0.12em;
+.shift-card {
+  padding:22px 18px;
+  border-radius:20px;
+  text-align:center;
+  min-height:150px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.shift-card-label {
+  font-size:0.75rem;
+  letter-spacing:0.3em;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:600;
+}
+.shift-card-emoji {
+  font-size:2rem;
+}
+.shift-card-shift {
+  font-size:2.4rem;
+  font-weight:600;
+  font-family:var(--heading-font);
+  letter-spacing:0.08em;
+}
+.shift-card-date {
+  font-size:0.9rem;
+  color:var(--text2);
+  letter-spacing:0.08em;
 }
 
-/* Start date */
+/* Start date *//* Start date */
 .start-row {
   display:flex; align-items:center; justify-content:center; gap:10px;
   padding:10px; margin:8px 0; font-size:0.85rem;
@@ -208,212 +221,6 @@ body.light .glass {
   letter-spacing:0.2em; text-transform:uppercase; font-family: var(--heading-font);
 }
 .controls-wrap { position:relative; display:flex; align-items:center; justify-content:center; width:100%; }
-
-/* Insights & cycle progress */
-.insights {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:12px;
-  margin:10px 0;
-  padding:14px;
-}
-.insight-card {
-  padding:12px 14px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.12);
-  background:rgba(255,255,255,0.05);
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  min-height:88px;
-  transition:transform 0.2s, border-color 0.2s;
-}
-.insight-card:hover {
-  border-color:var(--day);
-  transform:translateY(-2px);
-}
-.insight-card.focus {
-  background:linear-gradient(135deg, rgba(14,165,233,0.18), rgba(79,70,229,0.15));
-  border-color:rgba(14,165,233,0.4);
-  box-shadow:0 12px 30px rgba(14,165,233,0.25);
-}
-.insight-label {
-  font-size:0.7rem;
-  letter-spacing:0.3em;
-  text-transform:uppercase;
-  color:var(--muted);
-  font-weight:600;
-}
-.insight-value {
-  font-size:1.4rem;
-  font-weight:700;
-  font-family:var(--heading-font);
-  letter-spacing:0.08em;
-}
-.insight-sub {
-  font-size:0.75rem;
-  color:var(--text2);
-  letter-spacing:0.08em;
-  line-height:1.3;
-}
-body.light .insight-card {
-  background:rgba(255,255,255,0.9);
-  border-color:rgba(148,163,184,0.4);
-}
-body.light .insight-card.focus {
-  box-shadow:0 12px 30px rgba(59,130,246,0.18);
-}
-.cycle-progress {
-  margin-top:12px;
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.cycle-progress-header {
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-}
-.cycle-progress-title {
-  font-size:1rem;
-  font-weight:600;
-  letter-spacing:0.3em;
-  text-transform:uppercase;
-  font-family:var(--heading-font);
-}
-.cycle-progress-sub {
-  font-size:0.75rem;
-  color:var(--muted);
-  letter-spacing:0.18em;
-  text-transform:uppercase;
-}
-.cycle-progress-pill {
-  font-size:0.7rem;
-  font-weight:600;
-  padding:6px 12px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.3);
-  letter-spacing:0.2em;
-  text-transform:uppercase;
-}
-.cycle-progress-bar {
-  width:100%;
-  height:8px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.1);
-  overflow:hidden;
-}
-.cycle-progress-bar span {
-  display:block;
-  height:100%;
-  border-radius:999px;
-  background:linear-gradient(90deg, var(--day), var(--mid));
-  transition:width 0.4s ease;
-}
-.cycle-track {
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  padding-bottom:4px;
-  -webkit-overflow-scrolling:touch;
-  scroll-snap-type:x mandatory;
-  scrollbar-width:none;
-}
-.cycle-track::-webkit-scrollbar { display:none; }
-.cycle-chip {
-  flex:0 0 auto;
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,0.2);
-  font-size:0.72rem;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--text2);
-  background:rgba(255,255,255,0.04);
-  scroll-snap-align:center;
-  transition:all 0.3s ease;
-}
-.cycle-chip.active {
-  color:#fff;
-  border-color:var(--day);
-  background:rgba(14,165,233,0.35);
-}
-.cycle-chip.past {
-  opacity:0.5;
-}
-body.light .cycle-chip {
-  background:rgba(15,23,42,0.06);
-  border-color:rgba(148,163,184,0.35);
-  color:#0f172a;
-}
-body.light .cycle-chip.active {
-  background:rgba(14,165,233,0.25);
-  color:#fff;
-}
-
-/* Fatigue meter */
-.fatigue-meter {
-  margin-top:8px;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.fatigue-bar-wrap {
-  flex:1;
-  height:6px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.1);
-  overflow:hidden;
-}
-body.light .fatigue-bar-wrap {
-  background:rgba(15,23,42,0.08);
-}
-.fatigue-bar-fill {
-  height:100%;
-  border-radius:999px;
-  transition:width 0.6s ease;
-}
-.fatigue-label {
-  font-size:0.7rem;
-  font-weight:600;
-  letter-spacing:0.15em;
-  text-transform:uppercase;
-  min-width:48px;
-  text-align:right;
-}
-
-/* Weekly mini calendar in insights */
-.week-mini {
-  display:flex;
-  gap:4px;
-  margin-top:6px;
-}
-.week-mini-dot {
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  opacity:0.7;
-}
-.week-mini-dot.current {
-  opacity:1;
-  box-shadow:0 0 6px currentColor;
-  transform:scale(1.3);
-}
-
-/* Motivational message */
-.motivation-msg {
-  text-align:center;
-  padding:10px 16px;
-  font-size:0.8rem;
-  color:var(--text2);
-  letter-spacing:0.06em;
-  font-style:italic;
-  animation:fadeIn 0.8s ease;
-}
-
 
 /* View toggle */
 .view-toggle {
@@ -508,41 +315,6 @@ body.light .fatigue-bar-wrap {
 .cell[data-shift="비번"] .shift { color:var(--off); }
 .cell[data-shift="휴무"] .shift { color:var(--rest); }
 
-/* Legend */
-.legend {
-  display:flex; justify-content:center; gap:14px; margin-top:14px;
-  flex-wrap:wrap; font-size:0.72rem; font-weight:600;
-  letter-spacing:0.18em; text-transform:uppercase; font-family: var(--body-font);
-}
-.legend span { display:flex; align-items:center; gap:5px; }
-.legend .dot { width:10px; height:10px; border-radius:50%; }
-
-/* Stats bar chart */
-.stats-card { padding:20px; margin-top:14px; }
-.stats-card h3 { font-size:1.05rem; font-weight:600; margin-bottom:12px; font-family: var(--heading-font); letter-spacing:0.3em; text-transform:uppercase; color:var(--text); }
-.stat-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; font-size:0.95rem; letter-spacing:0.12em; text-transform:uppercase; font-family: var(--body-font); }
-.stat-label { width:36px; font-weight:600; text-align:right; flex-shrink:0; letter-spacing:0.1em; font-family: var(--heading-font); }
-.stat-bar-bg { flex:1; height:20px; background:var(--glass); border-radius:6px; overflow:hidden; }
-.stat-bar { height:100%; border-radius:6px; transition: width 0.6s ease; display:flex; align-items:center; padding-left:6px; font-size:0.7rem; color:#fff; font-weight:600; min-width:fit-content; letter-spacing:0.08em; }
-.stat-count { width:28px; text-align:right; font-weight:600; color:var(--muted); flex-shrink:0; letter-spacing:0.12em; }
-
-/* Upcoming list */
-.upcoming { padding:16px; margin-top:12px; }
-.upcoming h3 { font-size:0.9rem; font-weight:600; margin-bottom:12px; font-family: var(--heading-font); letter-spacing:0.25em; text-transform:uppercase; color:var(--text); }
-.upcoming-item {
-  display:flex; align-items:center; gap:12px; padding:10px 12px;
-  border-radius:var(--radius-sm); margin-bottom:6px;
-  background:var(--glass); border:1px solid var(--glass-border);
-  transition: all 0.15s; animation: fadeIn 0.4s ease;
-  letter-spacing:0.02em;
-  font-family: var(--body-font);
-}
-.upcoming-item .up-day { font-size:0.8rem; color:var(--muted); min-width:72px; font-weight:500; letter-spacing:0.1em; font-family: var(--body-font); text-transform:uppercase; }
-.upcoming-item .up-date { font-size:0.75rem; color:var(--muted); min-width:42px; letter-spacing:0.1em; font-family: var(--body-font); }
-.upcoming-item .up-shift { font-weight:700; font-size:0.9rem; font-family: var(--heading-font); letter-spacing:0.06em; text-transform:uppercase; }
-.upcoming-item .up-holiday { font-size:0.7rem; color:var(--holiday); margin-left:auto; letter-spacing:0.1em; text-transform:uppercase; }
-.upcoming-item.is-today { border-color:rgba(250,204,21,0.3); background:rgba(250,204,21,0.05); }
-
 /* Modal */
 .modal-overlay {
   position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:100;
@@ -594,7 +366,6 @@ body.light .fatigue-bar-wrap {
   .container { max-width: 100%; padding: 14px 8px 72px; }
   .header { gap: 10px; }
   .header h1 { font-size: 1.6rem; }
-  .today-banner { margin: 10px 0; }
   .controls { gap: 6px; }
   .view-toggle { width: 100%; justify-content: center; }
   .weekdays { padding: 8px 0 6px; }
@@ -619,7 +390,6 @@ body.week-mode .weekdays span { color: #0b0d1a; }
   .cell { min-height:130px; padding:14px 8px; border-radius:14px; }
   .cell .shift { font-size:1.2rem; }
   .cell .date { font-size:1.3rem; }
-  .today-banner .today-shift { font-size:3rem; }
 }
 
 @media (max-width:520px) {
@@ -647,18 +417,16 @@ body.week-mode .weekdays span { color: #0b0d1a; }
     </div>
   </div>
 
-  <!-- Today banner -->
-  <div class="today-banner glass" id="todayBanner"></div>
+  <div class="shift-summary">
+    <div class="shift-card glass" id="todayShiftCard"></div>
+    <div class="shift-card glass" id="tomorrowShiftCard"></div>
+  </div>
 
   <!-- Start date -->
   <div class="start-row glass">
     <label>📌 근무 시작일</label>
     <input type="date" id="startDate">
   </div>
-
-  <!-- Insights -->
-  <div class="insights glass" id="insights"></div>
-  <div class="cycle-progress glass" id="cycleProgress"></div>
 
   <!-- Month controls -->
   <div class="controls-wrap">
@@ -676,21 +444,6 @@ body.week-mode .weekdays span { color: #0b0d1a; }
     <div class="calendar" id="cal"></div>
   </div>
 
-  <!-- Legend -->
-  <div class="legend">
-    <span><i class="dot" style="background:var(--day)"></i>주간</span>
-    <span><i class="dot" style="background:var(--night)"></i>야간</span>
-    <span><i class="dot" style="background:var(--mid)"></i>심야</span>
-    <span><i class="dot" style="background:var(--off)"></i>비번</span>
-    <span><i class="dot" style="background:var(--rest)"></i>휴무</span>
-    <span><i class="dot" style="background:var(--holiday)"></i>공휴일</span>
-  </div>
-
-  <!-- Stats -->
-  <div class="stats-card glass" id="stats"></div>
-
-  <!-- Upcoming -->
-  <div class="upcoming glass" id="upcoming"></div>
 </div>
 
 <!-- Detail modal -->
@@ -729,8 +482,7 @@ let slideDir = '';
 
 const $ = id => document.getElementById(id);
 const $cal = $('cal'), $label = $('monthLabel'), $start = $('startDate');
-const $stats = $('stats'), $upcoming = $('upcoming'), $banner = $('todayBanner');
-const $insights = $('insights'), $cycleProgress = $('cycleProgress');
+const $todayCard = $('todayShiftCard'), $tomorrowCard = $('tomorrowShiftCard');
 const $modal = $('modal'), $overlay = $('modalOverlay'), $toast = $('toast');
 const $calWrapper = $cal.parentElement;
 
@@ -774,204 +526,35 @@ function getShift(dateStr) {
   return PATTERN[((diff % 10) + 10) % 10];
 }
 
-function getCycleDay(dateStr) {
-  const start = new Date($start.value+'T00:00:00');
-  const cur = new Date(dateStr+'T00:00:00');
-  const diff = Math.round((cur - start) / 86400000);
-  return (((diff % 10) + 10) % 10) + 1;
-}
-
 function getNotes() { return getDeviceNotes(); }
 function saveNotes(n) { saveDeviceNotes(n); }
 
-function nextRestDays() {
-  const t = today();
-  for (let i = 1; i <= 30; i++) {
-    const d = new Date(t); d.setDate(d.getDate()+i);
-    const s = getShift(fmt(d));
-    if (s === '휴무' || s === '비번') return i;
-  }
-  return null;
+function formatDisplayDate(date) {
+  return `${date.getMonth()+1}/${date.getDate()} (${DAYS_KR[date.getDay()]})`;
 }
 
-function daysUntil(dateStr) {
-  const target = new Date(dateStr+'T00:00:00');
-  const diff = Math.round((target - today()) / 86400000);
-  return Math.max(diff, 0);
-}
+function renderShiftCards() {
+  const todayDate = today();
+  const tomorrowDate = new Date(todayDate);
+  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+  const todayKey = fmt(todayDate);
+  const tomorrowKey = fmt(tomorrowDate);
+  const todayShift = getShift(todayKey);
+  const tomorrowShift = getShift(tomorrowKey);
+  const todayColor = SHIFT_COLOR[todayShift];
+  const tomorrowColor = SHIFT_COLOR[tomorrowShift];
 
-function getNextHoliday(fromDate = today()) {
-  const current = fmt(fromDate);
-  const sorted = Object.keys(HOLIDAYS).sort();
-  for (const date of sorted) {
-    if (date >= current) return { date, label: HOLIDAYS[date] };
-  }
-  return null;
-}
-
-function getConsecutiveWorkDays(refDate = today()) {
-  let count = 0;
-  const cursor = new Date(refDate);
-  while (true) {
-    const ds = fmt(cursor);
-    const shift = getShift(ds);
-    if (shift === '휴무' || shift === '비번') break;
-    count++;
-    cursor.setDate(cursor.getDate() - 1);
-  }
-  return count;
-}
-
-function getFatigueLevel() {
-  // Fatigue based on consecutive work days and shift type
-  const consecutive = getConsecutiveWorkDays();
-  const ts = todayStr();
-  const shift = getShift(ts);
-  let base = consecutive * 15; // 15% per consecutive work day
-  if (shift === '야간') base += 15;
-  if (shift === '심야') base += 25;
-  if (shift === '비번' || shift === '휴무') base = Math.max(0, base - 30);
-  return Math.min(100, Math.max(0, base));
-}
-
-function getFatigueColor(level) {
-  if (level <= 30) return '#22c55e';
-  if (level <= 60) return '#eab308';
-  if (level <= 80) return '#f97316';
-  return '#ef4444';
-}
-
-function getFatigueEmoji(level) {
-  if (level <= 20) return '😊';
-  if (level <= 40) return '🙂';
-  if (level <= 60) return '😐';
-  if (level <= 80) return '😓';
-  return '😵';
-}
-
-function getMotivation() {
-  const ts = todayStr();
-  const shift = getShift(ts);
-  const rest = nextRestDays();
-  const d = new Date();
-  const hour = d.getHours();
-  const msgs = {
-    '주간': ['오늘도 화이팅! 해 떠 있을 때 힘내요 ☀️', '좋은 하루 되세요! 퇴근이 기다려요 💪', '주간 근무 파이팅! 점심 맛있게 드세요 🍚'],
-    '야간': ['밤새 고생 많아요! 건강 챙기세요 🌙', '야간 근무도 끝이 있어요. 힘내세요! ✨', '조용한 밤, 차 한잔 어때요? ☕'],
-    '심야': ['깊은 밤 수고하세요! 곧 끝나요 🌃', '심야 근무 끝나면 푹 쉬어요 💤', '새벽의 용사, 파이팅! 🦸'],
-    '비번': ['오늘은 쉬는 날! 맘껏 쉬세요 🏖️', '비번 만끽하세요! 충전의 시간 ⚡', '좋아하는 거 하면서 쉬어요 😎'],
-    '휴무': ['완전한 휴식의 날! 리프레시 타임 😴', '오늘은 나를 위한 날이에요 🎉', '푹 쉬고 에너지 충전하세요! 🔋']
-  };
-  const pool = msgs[shift] || msgs['주간'];
-  // Deterministic pick based on date
-  const dayNum = parseInt(ts.replace(/-/g, ''));
-  return pool[dayNum % pool.length];
-}
-
-function getWeekPreview() {
-  const t = today();
-  let dots = '';
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(t); d.setDate(t.getDate() + i);
-    const s = getShift(fmt(d));
-    const isCurrent = i === 0;
-    dots += `<span class="week-mini-dot${isCurrent ? ' current' : ''}" style="background:${SHIFT_COLOR[s]};color:${SHIFT_COLOR[s]}"></span>`;
-  }
-  return dots;
-}
-
-function renderInsights() {
-  const restDays = nextRestDays();
-  const holidayInfo = getNextHoliday();
-  const consecutive = getConsecutiveWorkDays();
-  const fatigue = getFatigueLevel();
-  const fatigueColor = getFatigueColor(fatigue);
-  const fatigueEmoji = getFatigueEmoji(fatigue);
-  const restLabel = restDays ? `${restDays}일` : '오늘 쉬는 날';
-  const restSub = restDays ? `다음 비번/휴무까지 ${restDays}일 남음` : '충분히 쉬어요!';
-  const workLabel = consecutive ? `${consecutive}일 연속` : '오늘부터 시작';
-  const workSub = consecutive ? '잠깐 쉬며 집중 유지!' : '새 사이클을 응원해요!';
-  const holidayLabel = holidayInfo ? `${holidayInfo.date.slice(5).replace('-', '/')} - ${holidayInfo.label}` : '다음 공휴일 없음';
-  const holidaySub = holidayInfo ? `${daysUntil(holidayInfo.date)}일 남음` : '휴식 계획 잡아볼까요?';
-  const weekPreview = getWeekPreview();
-  $insights.innerHTML = `
-    <div class="insight-card focus">
-      <div class="insight-label">다음 휴무</div>
-      <div class="insight-value">${restLabel}</div>
-      <div class="insight-sub">${restSub}</div>
-      <div class="week-mini">${weekPreview}</div>
-    </div>
-    <div class="insight-card">
-      <div class="insight-label">컨디션 ${fatigueEmoji}</div>
-      <div class="insight-value">${fatigue <= 30 ? '좋음' : fatigue <= 60 ? '보통' : '피로'}</div>
-      <div class="fatigue-meter">
-        <div class="fatigue-bar-wrap"><div class="fatigue-bar-fill" style="width:${fatigue}%;background:${fatigueColor}"></div></div>
-        <span class="fatigue-label" style="color:${fatigueColor}">${fatigue}%</span>
-      </div>
-    </div>
-    <div class="insight-card">
-      <div class="insight-label">현재 연속 근무</div>
-      <div class="insight-value">${workLabel}</div>
-      <div class="insight-sub">${workSub}</div>
-    </div>
-    <div class="insight-card">
-      <div class="insight-label">다가오는 공휴일</div>
-      <div class="insight-value">${holidayLabel}</div>
-      <div class="insight-sub">${holidaySub}</div>
-    </div>
+  $todayCard.innerHTML = `
+    <div class="shift-card-label">오늘</div>
+    <div class="shift-card-emoji">${SHIFT_EMOJI[todayShift]}</div>
+    <div class="shift-card-shift" style="color:${todayColor}">${todayShift}</div>
+    <div class="shift-card-date">${formatDisplayDate(todayDate)}</div>
   `;
-}
-
-function scrollCycleToActive() {
-  const track = document.querySelector('.cycle-track');
-  const active = track && track.querySelector('.cycle-chip.active');
-  if (active && track) {
-    active.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
-  }
-}
-
-function renderCycleProgress() {
-  const ts = todayStr();
-  const cycleDay = getCycleDay(ts);
-  const pct = Math.round((cycleDay / PATTERN.length) * 100);
-  const patternHtml = PATTERN.map((shift, index) => {
-    const active = index === cycleDay - 1;
-    const past = index < cycleDay - 1;
-    return `<span class="cycle-chip${active ? ' active' : ''}${past ? ' past' : ''}" title="${index+1}일 - ${shift}">${index+1}일 - ${SHIFT_EMOJI[shift]} ${shift}</span>`;
-  }).join('');
-  const currentShift = PATTERN[cycleDay - 1];
-  $cycleProgress.innerHTML = `
-    <div class="cycle-progress-header">
-      <div>
-        <div class="cycle-progress-title">10일 사이클</div>
-        <div class="cycle-progress-sub">현재 ${cycleDay}일차 / 10일</div>
-      </div>
-      <div class="cycle-progress-pill">${SHIFT_EMOJI[currentShift]} ${currentShift}</div>
-    </div>
-    <div class="cycle-progress-bar"><span style="width:${pct}%;"></span></div>
-    <div class="cycle-track">${patternHtml}</div>
-    <div class="motivation-msg">${getMotivation()}</div>
-  `;
-}
-
-function renderBanner() {
-  const ts = todayStr();
-  const shift = getShift(ts);
-  const emoji = SHIFT_EMOJI[shift];
-  const color = SHIFT_COLOR[shift];
-  const rest = nextRestDays();
-  // Next shift
-  const tom = new Date(today()); tom.setDate(tom.getDate()+1);
-  const nextShift = getShift(fmt(tom));
-  const holiday = HOLIDAYS[ts];
-
-  $banner.innerHTML = `
-    <div class="today-label">오늘의 근무</div>
-    <div class="today-emoji">${emoji}</div>
-    <div class="today-shift" style="color:${color}">${shift}</div>
-    ${holiday ? `<div style="color:var(--holiday);font-size:0.85rem;margin-top:2px">🎌 ${holiday}</div>` : ''}
-    <div class="today-sub">내일: ${SHIFT_EMOJI[nextShift]} ${nextShift} · ${getCycleDay(ts)}일차/10일</div>
-    ${rest ? `<div class="rest-countdown">🏖️ 다음 쉬는날까지 ${rest}일</div>` : '<div class="rest-countdown">🎉 내일 쉽니다!</div>'}
+  $tomorrowCard.innerHTML = `
+    <div class="shift-card-label">내일</div>
+    <div class="shift-card-emoji">${SHIFT_EMOJI[tomorrowShift]}</div>
+    <div class="shift-card-shift" style="color:${tomorrowColor}">${tomorrowShift}</div>
+    <div class="shift-card-date">${formatDisplayDate(tomorrowDate)}</div>
   `;
 }
 
@@ -988,13 +571,11 @@ function renderMonth() {
   let html = '';
   for (let i = 0; i < startDay; i++) html += '<div class="cell empty"></div>';
 
-  const counts = {};
   for (let d = 1; d <= days; d++) {
     const ds = fmtLocal(viewYear, viewMonth, d);
     const date = new Date(viewYear, viewMonth, d);
     const dow = date.getDay();
     const shift = getShift(ds);
-    counts[shift] = (counts[shift]||0) + 1;
     const cls = ['cell'];
     if (dow === 0) cls.push('sun');
     if (dow === 6) cls.push('sat');
@@ -1007,60 +588,18 @@ function renderMonth() {
   $cal.innerHTML = html;
   if (slideDir) { $cal.classList.add('slide-'+slideDir); setTimeout(()=>$cal.classList.remove('slide-'+slideDir),300); slideDir=''; }
 
-  renderStats(counts, days);
-}
-
-function renderStats(counts, total) {
-  const order = ['주간','야간','심야','비번','휴무'];
-  const workDays = (counts['주간']||0)+(counts['야간']||0)+(counts['심야']||0);
-  const offDays = (counts['비번']||0)+(counts['휴무']||0);
-  let html = `<h3>📊 근무 통계 (근무 ${workDays}일 / 휴일 ${offDays}일)</h3>`;
-  order.forEach(s => {
-    const c = counts[s]||0;
-    const pct = total ? Math.round(c/total*100) : 0;
-    html += `<div class="stat-row">
-      <span class="stat-label" style="color:${SHIFT_COLOR[s]}">${s}</span>
-      <div class="stat-bar-bg"><div class="stat-bar" style="width:${pct}%;background:${SHIFT_COLOR[s]}">${pct}%</div></div>
-      <span class="stat-count">${c}일</span>
-    </div>`;
-  });
-  $stats.innerHTML = html;
-}
-
-function renderUpcoming() {
-  const t = today();
-  const ts = todayStr();
-  let html = '<h3>📅 다가오는 7일</h3>';
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(t); d.setDate(t.getDate()+i);
-    const ds = fmt(d); const shift = getShift(ds);
-    const dow = DAYS_KR[d.getDay()];
-    const hol = HOLIDAYS[ds];
-    const isToday = i === 0;
-    html += `<div class="upcoming-item${isToday?' is-today':''}" onclick="openDetail('${ds}')">
-      <span class="up-day">${d.getMonth()+1}/${d.getDate()} (${dow})</span>
-      <span class="up-shift" style="color:${SHIFT_COLOR[shift]}">${SHIFT_EMOJI[shift]} ${shift}</span>
-      ${hol?`<span class="up-holiday">🎌 ${hol}</span>`:''}
-    </div>`;
-  }
-  $upcoming.innerHTML = html;
 }
 
 function render() {
-  renderBanner();
-  renderInsights();
+  renderShiftCards();
   renderMonth();
-  renderCycleProgress();
-  renderUpcoming();
-  requestAnimationFrame(scrollCycleToActive);
 }
 
 // Detail modal
 function openDetail(ds) {
   const d = new Date(ds+'T00:00:00');
   const shift = getShift(ds);
-  const cycle = getCycleDay(ds);
-  const dow = DAYS_KR[d.getDay()];
+    const dow = DAYS_KR[d.getDay()];
   const hol = HOLIDAYS[ds];
   const notes = getNotes();
   const note = notes[ds] || '';
@@ -1068,7 +607,6 @@ function openDetail(ds) {
   $modal.innerHTML = `
     <h3>${SHIFT_EMOJI[shift]} ${shift}</h3>
     <div class="modal-date">${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 (${dow})${hol?' · 🎌 '+hol:''}</div>
-    <div class="modal-cycle">10일 주기 중 <strong>${cycle}일차</strong> · 패턴: ${PATTERN.map((p,i)=>i===cycle-1?`<strong>[${p}]</strong>`:p).join(' → ')}</div>
     <label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:6px;">📝 메모</label>
     <textarea class="note-area" id="noteInput" placeholder="메모를 입력하세요...">${note}</textarea>
     <div class="modal-btns">
