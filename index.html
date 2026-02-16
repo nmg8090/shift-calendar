@@ -405,14 +405,14 @@ body.week-mode .weekdays span { color: #0b0d1a; }
 }
 
 @media (max-width:520px) {
-  .container { padding: 8px 4px 72px; }
-  .cal-wrapper { min-height:min(50vh,300px); padding-top:6px; border-radius:16px; overflow-y:auto; }
-  .calendar { gap:2px; padding:0; grid-template-columns:repeat(7, minmax(0, calc((100% - 12px)/7))); grid-auto-rows:minmax(70px,1fr); }
-  .cell { min-height:90px; padding:6px 4px; }
-  .cell .date { font-size:1.15rem; }
-  .cell .shift { font-size:1.15rem; }
-  .weekdays { font-size:0.75rem; letter-spacing:0.1em; }
-  .calendar, .cal-wrapper { transform:scale(0.95); transform-origin:top; }
+  .container { padding: 6px 3px 60px; }
+  .cal-wrapper { min-height:min(45vh,280px); padding-top:4px; border-radius:14px; overflow-y:hidden; }
+  .calendar { gap:1px; padding:0; grid-template-columns:repeat(7, minmax(0, calc((100% - 14px)/7))); grid-auto-rows:minmax(60px,1fr); width:100%; }
+  .cell { min-height:70px; padding:4px 3px; }
+  .cell .date { font-size:1rem; }
+  .cell .shift { font-size:1rem; }
+  .weekdays { font-size:0.7rem; letter-spacing:0.08em; }
+  .calendar { transform:scale(0.83); transform-origin:top center; }
   body { background: #01030a; }
 }
 
